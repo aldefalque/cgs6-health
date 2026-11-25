@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Edinburgh Allotments & Health | Group 6</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- font import from https://fonts.google.com/specimen/Roboto?query=roboto -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<style>
+
+/* Getting the font in CSS */
+.roboto{
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+/* WHAT DOES THIS DO */
+*{box-sizing:border-box}
+
+/* Setting general body styling for the site, including fallback fonts */
+body{margin:0;font:15px;font-family: roboto, Helvetica, Arial, sans-serif;color:#232c3d;background:white}
+
+/* Header related styles for larger sections */
+header{background:white;color:#232c3d;padding:22px 26px;position:relative;text-align:center;z-index:900;border-bottom:1px solid #e0e4eb}
+
+/* Headers for the larger sections */
+header h1{font-family:inherit;font-size:clamp(25px,3vw,37px);position:relative;text-align:center;letter-spacing:-.6px;margin:0 0 5px}
+
+/* Paragraph styling for larger sections */
+p{font-family:inherit;font-size:14px;margin:0;color:#637188}
+
+/* Header styling for smaller sections */
+h1{font-size:20px;margin:0 0 10px}
+
+/* General h2 styling */
+h2{font-family:inherit;font-size:18px; margin:0 0 8px}
+h3{font-size:16px;margin:0 0 8px}.muted{color:#000000;font-size:13px}
+
+/* Tab styling taken & adapted from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_full_page_tabs * /
+/* Style tab links */
+.tablink {
+  background-color: #14590fbc;
+  color: white;
+  float: left;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 20px;
+  font-family: inherit;
+  font-weight: 600;
+  width: 20%;
+}
+
+/* When you hover on the tabs */
+.tablink:hover {
+  background-color: #14590f;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+/* Styling for map & its panels */
+#mapwrap{position:relative;width:98%;margin:0 auto;background:white}
+#map{height:calc(100vh - 110px);min-height:430;background:white}
+
+.panel{position:absolute;z-index:800;top:15px;background:white;max-height:calc(100% - 30px);overflow:auto;border-radius:9px;box-shadow:0 3px 18px #0003;padding:15px}
+
+#about{left:15px;width:275px}
+#details{right:15px;width:340px;display:none}
+#layers{font-family:inherit;position:absolute;z-index:800;bottom:26px;left:15px;background:white;padding:9px;border-radius:6px;box-shadow:0 2px 10px #0002;font-size:13px;line-height:1.5}
+
+button{cursor:pointer;border:0;border-radius:5px;padding:7px 9px}#close{float:right;background:#eff2f7}
+
+.metric{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #edf0ed;gap:10px;font-size:13px}.metric strong{text-align:right}
+
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.gallery img{width:100%;height:100px;object-fit:cover;border-radius:5px;cursor:pointer}
+
+.note{background:#eff3fa;border-left:3px solid #526fa9;padding:9px;font-size:12px;line-height:1.5}#layers{position:absolute;z-index:800;bottom:26px;left:15px;background:white;padding:9px;border-radius:6px;box-shadow:0 2px 10px #0002;font-size:13px}
+
+.leaflet-popup-content{line-height:1.5}
+
+@media(max-width:760px){#about{width:210px;top:95px;max-height:37vh}#details{top:auto;bottom:12px;right:8px;left:8px;width:auto;max-height:45vh}#layers{bottom:15px}}
+
+/* embed styling */
+embed { display: block; width: 100%; height: 100vh; border: 0; }
+
+* styling for general txtfiles */
+.textfile{
+  margin: 0;
+  padding: 1rem;
+  overflow: auto;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  width: fit=content;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #222;
+  background: #fafafa;
+  }
+
+/* styling for citation txt */
+.citations_textfile{
+  margin: 0;
+  padding: 1rem;
+  height: 100vh;
+  overflow: none;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #222;
+  background: #fafafa;
+  }
+
+
+</style></head><body>
+<!-- Main header for the website-->
+<header><h1>GREENSPACES, HEALTH, & ALLOTMENTS</h1><p text-align:center>Edinburgh | GIS & Earth Observation | Group 6</p></header>
+
+<button class="tablink" onclick="openPage('Home')" id="defaultOpen">HOME</button>
+<button class="tablink" onclick="openPage('Methodology')">METHODLOGY</button>
+<button class="tablink" onclick="openPage('Findings')">FINDINGS</button>
+<button class="tablink" onclick="openPage('Query')">QUERY</button>
+<button class="tablink" onclick="openPage('Citations')">FURTHER READING</button>
+
+<!-- Opening Content Tab -->
+<div id="Home" class="tabcontent">
+  <h1>HOME</h1>
+  <pre class="textfile" id="intro">Loading…</pre>
+
+<!-- map header & map container-->
+<div>
+  <header><h1>Edinburgh Allotments</h1></header>
+</div>
+
+<div id="mapwrap">
+  <div id="map"></div>
+
+  <aside id="about" class="panel">
+    <h2>How to use this map</h2>
+    <p class="muted">Click an allotment marker or boundary to explore its details. Zoom in to see the exact boundaries.</p>
+  </aside>
+
+  <aside id="details" class="panel">
+    <button id="close" type="button">✕</button>
+    <h2 id="sitename"></h2>
+    <div id="sitebody"></div>
+  </aside>
+
+  <div id="layers">
+    <strong>Map view</strong><br>
+    <label><input type="radio" name="basemap" value="satellite" checked> Satellite</label>
+    <label><input type="radio" name="basemap" value="street"> Street map</label>
+
+    <hr>
+
+    <strong>SIMD deprivation hotspots</strong><br>
+
+    <label><input type="radio" name="hotspot" value="none" checked> None</label><br>
+    <label><input type="radio" name="hotspot" value="health"> Health</label><br>
+    <label><input type="radio" name="hotspot" value="income"> Income</label><br>
+    <label><input type="radio" name="hotspot" value="employment"> Employment</label>
+
+    <div id="hotspot-status" class="muted"></div>
+    <div class="muted" id="zoomhint"></div>
+  </div>
+
+</div>
+</div> <!-- /#Home -->
+
+
+<div id="Methodology" class="tabcontent">
+  <h1>METHODOLOGY</h1>
+  <!-- Initial content for the website-->
+  <h2>Problem statement</h2><p>How do the presence and condition of allotments relate to the Scottish Index of Multiple Deprivation (SIMD) Health Index across Edinburgh?</p>
+  <h2>Background</h2><p>Urban allotments provide space for growing food, outdoor activity and social connection. This project examines whether allotment presence and environmental condition are associated with local health indicators, </p>
+  <h2>Methodology</h2><p>Compare 10 allotment areas with 10 selected comparison areas without allotments. Combine council allotment data, field observations and SIMD data-zone health measures. A 300 m buffer is proposed around each study area</p>
+</div>
+
+<div id="Findings" class="tabcontent">
+  <h1>FINDINGS</h1>
+  <p>RESULTS OF JENNY'S STATS TESTING</p> 
+</div>
+
+<div id="Query" class="tabcontent">
+  <h1>QUERY HERE</h1>
+  <p>Who we are and what we do.</p>
+</div>
+
+<!/-- Citations tab content -->
+<div id="Citations" class="tabcontent">
+  <h1>Further Reading</h1>
+  <pre class="citations" id="citations">Loading…</pre>
+</div>
+
+<script>
+// Allotment boundaries and information are embedded below (from the uploaded shapefile and CSV files).
+const allotments = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"Dumbryden Allotments","source_name":"Dumbryden","neighbourhood":"South West NP","datazone":"S01008463","datazone_name":"Murrayburn and Wester Hailes North"}}]}
+
+const OUTLINE_ZOOM = 14;
+const $ = selector => document.querySelector(selector);
+
+// tab functionality from W3 schools 
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+// ---------- HTML helpers ----------
+
+const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
+// embedding txt files 
+// citations.txt //
+  fetch("citations.txt")
+    .then(r => r.text())
+    .then(text => { document.getElementById("citations").textContent = text; })
+    .catch(() => { document.getElementById("citations").textContent = "Could not load citations."; });
+
+// intro.txt //
+  fetch("intro.txt")
+    .then(r => r.text())
+    .then(text => { document.getElementById("intro").textContent = text; })
+    .catch(() => { document.getElementById("intro").textContent = "Could not load file."; });
+
+
+
+
+function escapeHTML(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ESCAPES[c]);
+}
+
+function line(label, value) {
+  return `<div class="metric">
+    <span>${escapeHTML(label)}</span>
+    <strong>${escapeHTML(value ?? 'Not recorded')}</strong>
+  </div>`;
+}
+
+function section(name, html, open = false) {
+  return `<details ${open ? 'open' : ''}><summary>${name}</summary>${html}</details>`;
+}
+
+function photoGallery(photos = []) {
+  if (!photos.length) {
+    return '<p class="muted">Photos not available.</p>'; // original text was cut off
+  }
+  const links = photos.map(url => {
+    const href = encodeURI(url);
+    return `<a href="${href}" target="_blank" rel="noopener">
+      <img loading="lazy" src="${href}" alt="Field photograph">
+    </a>`;
+  });
+  return `<div class="gallery">${links.join('')}</div>`;
+}
+
+function pendingList(items) {
+  return items.map(([label, status]) => `<p><b>${label}:</b> ${status}</p>`).join('');
+}
+
+function popupHTML(p, { withHint = false } = {}) {
+  return `<b>${escapeHTML(p.name)}</b><br>
+          ${escapeHTML(p.neighbourhood)}<br>
+          Centre: ${escapeHTML(p.lat)}, ${escapeHTML(p.lon)}
+          ${withHint ? '<br><small>See site details on the right.</small>' : ''}`;
+}
+
+// ---------- Site details panel ----------
+
+function showSite(p) {
+  $('#details').style.display = 'block';
+  $('#sitename').textContent = p.name;
+
+  const sections = [
+    section('Allotment information',
+      line('Neighbourhood', p.neighbourhood) +
+      line('Site centre', `${p.lat}, ${p.lon}`) +
+      line('Area', `${p.area_ha} ha`) +
+      line('Plots', p.plots),
+      true),
+
+    section('Fieldwork observations',
+      `<p>${escapeHTML(p.observations)}</p>
+       <p><b>Access and surroundings:</b> ${escapeHTML(p.access)}</p>`,
+      true),
+
+    section('Field photographs', photoGallery(p.photos)),
+
+    section('SIMD health information',
+      line('Data zone', p.datazone) +
+      line('Data-zone area', p.datazone_name) +
+      line('Health rank (Scotland)', p.health_rank?.toLocaleString('en-GB')) +
+      line('Prescribed medication', `${p.prescriptions}%`)
+      // + line('Emergency hospital ...', ...)  <- your original line was cut off here
+    ),
+
+    section('Earth observation findings', pendingList([
+      ['300 m buffers', 'planned / results pending.'],
+      ['NDVI', 'pending.'],
+      ['Land surface temperature', 'pending.'],
+      ['DEM / slope / aspect', 'pending.'],
+      ['Hotspot analysis', 'pending.'], // original text was cut off
+    ])),
+  ];
+
+  $('#sitebody').innerHTML = sections.join('');
+}
+
+// ---------- Map and basemaps ----------
+
+const map = L.map('map', { zoomControl: false }).setView([55.95, -3.21], 12);
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+const basemaps = {
+  street: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19,
+  }),
+  satellite: L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { attribution: 'Imagery &copy; Esri and imagery providers', maxZoom: 19 }
+  ),
+};
+
+let activeBasemap = basemaps.satellite.addTo(map);
+
+document.querySelectorAll('input[name=basemap]').forEach(input => {
+  input.addEventListener('change', e => {
+    map.removeLayer(activeBasemap);
+    activeBasemap = basemaps[e.target.value].addTo(map).bringToBack();
+  });
+});
+
+// ---------- SIMD HOTSPOT ANALYSIS ----------
+
+const hotspotFiles = {
+  health: 'GEOJSON/healthranks.geojson',
+  income: 'GEOJSON/incomeranks.geojson',
+  employment: 'GEOJSON/employmentranks.geojson'
+};
+
+function hotspotStyle(feature) {
+  const bin = Number(feature.properties.Gi_Bin);
+
+  const colours = {
+    '-3': '#2166ac',
+    '-2': '#4393c3',
+    '-1': '#92c5de',
+    '0': '#ffffff',
+    '1': '#f4a582',
+    '2': '#d6604d',
+    '3': '#b2182b'
+  };
+
+  return {
+    color:'#666666',
+    weight: 0.5,
+    fillColor: colours[bin] || '#ffffff',
+    fillOpacity: 0.7
+  };
+}
+
+const hotspotLayers = {};
+
+Object.entries(hotspotFiles).forEach(([name, file]) => {
+  fetch(file)
+    .then(r => r.json())
+    .then(data => {
+      // Fixed: Passed { style: hotspotStyle } INSIDE L.geoJSON()
+      hotspotLayers[name] = L.geoJSON(data, {
+        style: hotspotStyle
+      });
+    })
+    .catch(err => console.error(`Failed to load ${name}:`, err));
+});
+
+
+let activeHotspot = null;
+
+document.querySelectorAll('input[name="hotspot"]').forEach(button => {
+  button.addEventListener('change', () => {
+    if (activeHotspot) map.removeLayer(activeHotspot);
+
+    activeHotspot = hotspotLayers[button.value] || null;
+
+    if (activeHotspot) {
+      activeHotspot.addTo(map);
+      activeBasemap.bringToBack();
+    }
+  })
+})
+
+// ---------- Boundary polygons (shown when zoomed in) ----------
+
+const BASE_STYLE  = { color: '#ffcf65', weight: 3, fillColor: '#f7a930', fillOpacity: 0.3 };
+const HOVER_STYLE = { weight: 5, fillOpacity: 0.52 };
+
+const MARKER_STYLE = {
+  radius: 11, color: '#fff', weight: 3, fillColor: '#ec7e35', fillOpacity: 0.98,
+};
+
+// Create the empty markers group and populate it with each built polygon
+const markers = L.layerGroup();
+
+const layer = L.geoJSON(allotments, {
+  style: BASE_STYLE,
+  onEachFeature: (feature, l) => {
+    const p = feature.properties || {};
+    
+    // 1. Setup polygon popup & hover events
+    l.bindPopup(popupHTML(p, { withHint: true }));
+    l.on({
+      click:     () => showSite(p),
+      mouseover: () => l.setStyle(HOVER_STYLE),
+      mouseout:  () => layer.resetStyle(l),
+    });
+
+    // 2. Automatically find the center of the polygon
+    const center = (p.lat != null && p.lon != null) 
+      ? [p.lat, p.lon] 
+      : l.getBounds().getCenter();
+
+    L.circleMarker(center, MARKER_STYLE)
+      .bindTooltip(p.name || 'Allotment', { direction: 'top', offset: [0, -10] })
+      .bindPopup(popupHTML(p))
+      .on('click', () => showSite(p))
+      .addTo(markers);
+  },
+});
+
+
+// ---------- Point markers (shown when zoomed out) ----------
+
+
+// ---------- Map display ----------
+
+function updateSiteDisplay() {
+  const zoomedOut = map.getZoom() < OUTLINE_ZOOM;
+  const show = zoomedOut ? markers : layer;
+  const hide = zoomedOut ? layer : markers;
+
+  if (map.hasLayer(hide)) map.removeLayer(hide);
+  if (!map.hasLayer(show)) show.addTo(map);
+
+  $('#zoomhint').textContent = zoomedOut
+    ? 'Zoom in to see allotment boundaries'
+    : 'Showing allotment boundaries';
+}
+
+map.on('zoomend', updateSiteDisplay);
+//updateSiteDisplay();
+
+$('#close').addEventListener('click', () => {
+  $('#details').style.display = 'none';
+});
+
+// ---------- Initial view ----------
+
+//map.fitBounds(layer.getBounds().pad(0.12));
+
+</script></body></html>
