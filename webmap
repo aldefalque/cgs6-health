@@ -86,7 +86,7 @@ button{cursor:pointer;border:0;border-radius:5px;padding:7px 9px}#close{float:ri
 
     <strong>SIMD deprivation hotspots</strong><br>
 
-    <label><input type="radio" name="hotspot" value="none" checked> None</label><br>
+    <label><input type="radio" name="hotspot" value="none" checked> Allotments</label><br>
     <label><input type="radio" name="hotspot" value="health"> Health</label><br>
     <label><input type="radio" name="hotspot" value="income"> Income</label><br>
     <label><input type="radio" name="hotspot" value="employment"> Employment</label>
@@ -105,8 +105,7 @@ button{cursor:pointer;border:0;border-radius:5px;padding:7px 9px}#close{float:ri
   <h1>Interested in learning more?</h1><p>Query our allotment database here!</p>
 </div>
 <script>
-// Allotment boundaries and information are embedded below (from the uploaded shapefile and CSV files).
-const allotments = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"Dumbryden Allotments","source_name":"Dumbryden","neighbourhood":"South West NP","datazone":"S01008463","datazone_name":"Murrayburn and Wester Hailes North"}}]}
+// Allotment boundaries and information
 
 const OUTLINE_ZOOM = 14;
 const $ = selector => document.querySelector(selector);
@@ -148,8 +147,8 @@ function pendingList(items) {
 }
 
 function popupHTML(p, { withHint = false } = {}) {
-  return `<b>${escapeHTML(p.name)}</b><br>
-          ${escapeHTML(p.neighbourhood)}<br>
+  return `<b>${escapeHTML(p.NAME)}</b><br>
+          ${escapeHTML(p.NP_Name)}<br>
           Centre: ${escapeHTML(p.lat)}, ${escapeHTML(p.lon)}
           ${withHint ? '<br><small>See site details on the right.</small>' : ''}`;
 }
@@ -158,14 +157,14 @@ function popupHTML(p, { withHint = false } = {}) {
 
 function showSite(p) {
   $('#details').style.display = 'block';
-  $('#sitename').textContent = p.name;
+  $('#sitename').textContent = p.NAME;
 
   const sections = [
     section('Allotment information',
-      line('Neighbourhood', p.neighbourhood) +
+      line('Neighbourhood', p.NP_Name) +
       line('Site centre', `${p.lat}, ${p.lon}`) +
-      line('Area', `${p.area_ha} ha`) +
-      line('Plots', p.plots),
+      line('Area', `${p.Area_ha} ha`) +
+      line('Plots', p.Comments),
       true),
 
     section('Fieldwork observations',
@@ -284,6 +283,7 @@ document.querySelectorAll('input[name="hotspot"]').forEach(button => {
 const BASE_STYLE  = { color: '#ffcf65', weight: 3, fillColor: '#f7a930', fillOpacity: 0.3 };
 const HOVER_STYLE = { weight: 5, fillOpacity: 0.52 };
 
+
 const MARKER_STYLE = {
   radius: 11, color: '#fff', weight: 3, fillColor: '#ec7e35', fillOpacity: 0.98,
 };
@@ -291,26 +291,33 @@ const MARKER_STYLE = {
 // Create the empty markers group and populate it with each built polygon
 const markers = L.layerGroup();
 
+fetch ('GEOJSON/allotments.geojson')
+.then(r => r.json())
+.then(allotments => {
+
 const layer = L.geoJSON(allotments, {
   style: BASE_STYLE,
+
   onEachFeature: (feature, l) => {
     const p = feature.properties || {};
+
+    const center = l.getBounds().getCenter();
+
+    p.lat = center.lat.toFixed(6);
+    p.lon = center.lng.toFixed(6);
     
-    // 1. Setup polygon popup & hover events
+    // polygon popup & hover events
     l.bindPopup(popupHTML(p, { withHint: true }));
+
     l.on({
       click:     () => showSite(p),
       mouseover: () => l.setStyle(HOVER_STYLE),
       mouseout:  () => layer.resetStyle(l),
     });
 
-    // 2. Automatically find the center of the polygon
-    const center = (p.lat != null && p.lon != null) 
-      ? [p.lat, p.lon] 
-      : l.getBounds().getCenter();
 
     L.circleMarker(center, MARKER_STYLE)
-      .bindTooltip(p.name || 'Allotment', { direction: 'top', offset: [0, -10] })
+      .bindTooltip(p.NAME || 'Allotment', { direction: 'top', offset: [0, -10] })
       .bindPopup(popupHTML(p))
       .on('click', () => showSite(p))
       .addTo(markers);
@@ -337,7 +344,7 @@ function updateSiteDisplay() {
 }
 
 map.on('zoomend', updateSiteDisplay);
-//updateSiteDisplay();
+updateSiteDisplay();
 
 $('#close').addEventListener('click', () => {
   $('#details').style.display = 'none';
@@ -346,5 +353,8 @@ $('#close').addEventListener('click', () => {
 // ---------- Initial view ----------
 
 //map.fitBounds(layer.getBounds().pad(0.12));
+}).catch(e => console.error(e));
 
-</script></body></html>
+</script>
+</body>
+</html>
