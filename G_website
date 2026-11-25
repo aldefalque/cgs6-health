@@ -27,25 +27,54 @@
 *{box-sizing:border-box}
 
 /* Setting general body styling for the site, including fallback fonts */
-body{margin:0;font:15px;font-family: roboto, Helvetica, Arial, sans-serif;color:#232c3d;background:white}
+body{
+  margin:0;
+  font:15px;
+  font-family: roboto, Helvetica, Arial, sans-serif;
+  color:#232c3d;
+  background:white}
 
 /* Header related styles for larger sections */
-header{background:white;color:#232c3d;padding:22px 26px;position:relative;text-align:center;z-index:900;border-bottom:1px solid #e0e4eb}
+header{
+  background:white;
+  color:#232c3d;
+  padding:22px 26px;
+  position:relative;
+  text-align:center;
+  z-index:900;
+  border-bottom:1px solid #e0e4eb}
 
-/* Headers for the larger sections */
-header h1{font-family:inherit;font-size:clamp(25px,3vw,37px);position:relative;text-align:center;letter-spacing:-.6px;margin:0 0 5px}
+/* Header H1 styling for the larger sections */
+header h1{
+  font-family:inherit;
+  font-size:clamp(25px,3vw,37px);
+  position:relative;
+  text-align:center;
+  letter-spacing:-.6px;
+  margin:0 20px}
 
 /* Paragraph styling for larger sections */
-p{font-family:inherit;font-size:14px;margin:0;color:#637188}
+p{font-family:inherit;
+  font-size:14px;
+  margin:0 20px;
+  color:#637188}
 
 /* Header styling for smaller sections */
-h1{font-size:20px;margin:0 0 10px}
+h1{font: size 20px;
+  text-align:left;
+  margin:0 20px}
 
 /* General h2 styling */
-h2{font-family:inherit;font-size:18px; margin:0 0 8px}
-h3{font-size:16px;margin:0 0 8px}.muted{color:#000000;font-size:13px}
+h2{font-family:inherit;
+  font-size:18px; 
+  margin:020px}
 
-/* Tab styling taken & adapted from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_full_page_tabs * /
+h3{font-size:16px;
+  margin:0 20px}
+
+  .muted{color:#000000;font-size:13px}
+
+/* Tab styling taken & adapted from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_full_page_tabs */
 /* Style tab links */
 .tablink {
   background-color: #14590fbc;
@@ -56,7 +85,7 @@ h3{font-size:16px;margin:0 0 8px}.muted{color:#000000;font-size:13px}
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
-  font-size: 20px;
+  font-size: 25px;
   font-family: inherit;
   font-weight: 600;
   width: 20%;
@@ -67,39 +96,115 @@ h3{font-size:16px;margin:0 0 8px}.muted{color:#000000;font-size:13px}
   background-color: #14590f;
 }
 
+/* When tab is clicked/active */
+.tablink.active {
+  background-color: #14590f;
+}
+
 /* Style the tab content (and add height:100% for full page content) */
 .tabcontent {
   display: none;
-  padding: 100px 20px;
+  padding: 75px 20px;
   height: 100%;
 }
 
 /* Styling for map & its panels */
-#mapwrap{position:relative;width:98%;margin:0 auto;background:white}
-#map{height:calc(100vh - 110px);min-height:430;background:white}
+#mapwrap{
+  position:relative;
+  margin:0 20px;
+  background:white}
+#map{height:calc(100vh - 110px);min-height:430px;background:white}
 
-.panel{position:absolute;z-index:800;top:15px;background:white;max-height:calc(100% - 30px);overflow:auto;border-radius:9px;box-shadow:0 3px 18px #0003;padding:15px}
+.panel{
+  position:absolute;
+  z-index:800;top:15px;
+  background:white;
+  max-height:calc(100% - 30px);
+  overflow:auto;
+  border-radius:9px;
+  box-shadow:0 3px 18px #0003;
+  padding:15px}
 
-#about{left:15px;width:275px}
-#details{right:15px;width:340px;display:none}
-#layers{font-family:inherit;position:absolute;z-index:800;bottom:26px;left:15px;background:white;padding:9px;border-radius:6px;box-shadow:0 2px 10px #0002;font-size:13px;line-height:1.5}
+#about{
+  left:15px;
+  width:275px}
 
-button{cursor:pointer;border:0;border-radius:5px;padding:7px 9px}#close{float:right;background:#eff2f7}
+#details{
+  right:15px;
+  width:340px;
+  display:none}
 
-.metric{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #edf0ed;gap:10px;font-size:13px}.metric strong{text-align:right}
+#layers{font-family:inherit;
+  position:absolute;
+  z-index:800;
+  bottom:26px;
+  left:15px;
+  background:white;
+  padding:9px;
+  border-radius:6px;
+  box-shadow:0 2px 10px #0002;
+  font-size:13px;
+  line-height:1.5}
 
-.gallery{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.gallery img{width:100%;height:100px;object-fit:cover;border-radius:5px;cursor:pointer}
+button{
+  cursor:pointer;
+  border:0;
+  border-radius:5px;
+  padding:7px 9px}
 
-.note{background:#eff3fa;border-left:3px solid #526fa9;padding:9px;font-size:12px;line-height:1.5}#layers{position:absolute;z-index:800;bottom:26px;left:15px;background:white;padding:9px;border-radius:6px;box-shadow:0 2px 10px #0002;font-size:13px}
+  #close{float:right;background:#eff2f7}
+
+.metric{
+  display:flex;
+  justify-content:space-between;
+  padding:7px 0;
+  border-bottom:1px solid #edf0ed;
+  gap:10px;font-size:13px}
+  .metric strong{text-align:right}
+
+.gallery{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;margin-top:10px}
+  .gallery img{
+    width:100%;
+    height:100px;
+    object-fit:cover;
+    border-radius:5px;
+    cursor:pointer}
+
+.note{
+  background:#eff3fa;
+  border-left:3px solid #526fa9;
+  padding:9px;font-size:12px;
+  line-height:1.5}
+  #layers{
+    position:absolute;
+    z-index:800;bottom:26px;
+    left:15px;
+    background:white;
+    padding:9px;
+    border-radius:6px;
+    box-shadow:0 2px 10px #0002;
+    font-size:13px}
 
 .leaflet-popup-content{line-height:1.5}
 
-@media(max-width:760px){#about{width:210px;top:95px;max-height:37vh}#details{top:auto;bottom:12px;right:8px;left:8px;width:auto;max-height:45vh}#layers{bottom:15px}}
+@media(max-width:760px){
+  #about{
+    width:210px;
+    top:95px;
+    max-height:37vh}
+    #details{
+      top:auto;
+      bottom:12px;
+      right:8px;
+      left:8px;
+      width:auto;
+      max-height:45vh}
+      #layers{bottom:15px}}
 
-/* embed styling */
-embed { display: block; width: 100%; height: 100vh; border: 0; }
-
-/* styling for general txtfiles */
+/*styling for general txtfiles */
 .textfile{
   margin: 0;
   padding: 1rem;
@@ -111,22 +216,39 @@ embed { display: block; width: 100%; height: 100vh; border: 0; }
   font-size: 1rem;
   line-height: 1.6;
   color: #222;
-  background: #fafafa;
+  background: #ffffff;
   }
 
 /* styling for citation txt */
-.citations_textfile{
+.citations_textfile {
   margin: 0;
   padding: 1rem;
-  height: 100vh;
-  overflow: none;
   box-sizing: border-box;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 100%;
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.6;
   color: #222;
-  background: #fafafa;
+  background: #ffffff;
+}
+
+/* image styling for multiple figures in a row, Claude Sonnet 5.5*/ 
+  .figure-row {
+    display: flex;
+    gap: 1em;                  /* space between the images */
+    justify-content: center;   /* center the row; use flex-start to left-align */
+    align-items: flex-start;
+  }
+  .figure-row figure {
+    width: 25%;
+    margin: 0;
+    text-align: center;        /* replaces the old align="center" */
+  }
+  .figure-row img {
+    width: 100%;
+    height: auto;
   }
 
 
@@ -134,22 +256,20 @@ embed { display: block; width: 100%; height: 100vh; border: 0; }
 <!-- Main header for the website-->
 <header><h1>GREENSPACES, HEALTH, & ALLOTMENTS</h1><p text-align:center>Edinburgh | GIS & Earth Observation | Group 6</p></header>
 
-<button class="tablink" onclick="openPage('Home')" id="defaultOpen">HOME</button>
-<button class="tablink" onclick="openPage('Methodology')">METHODLOGY</button>
-<button class="tablink" onclick="openPage('Findings')">FINDINGS</button>
-<button class="tablink" onclick="openPage('Query')">QUERY</button>
-<button class="tablink" onclick="openPage('Citations')">FURTHER READING</button>
+<button class="tablink" onclick="openPage('Map', this)" id="defaultOpen">MAP</button>
+<button class="tablink" onclick="openPage('Methods', this)">METHODS</button>
+<button class="tablink" onclick="openPage('Findings', this)">FINDINGS</button>
+<button class="tablink" onclick="openPage('Query', this)">QUERY</button>
+<button class="tablink" onclick="openPage('Citations', this)">FURTHER READING</button>
 
 <!-- Opening Content Tab -->
-<div id="Home" class="tabcontent">
-  <h1>HOME</h1>
+<div id="Map" class="tabcontent">
+<header><h1>Allotments & SIMD Deprivation Hotspots in Edinburgh</h1>
+  <p>Explore the allotments of Edinburgh and their surrounding deprivation hotspots.</p></header>
+<!-- putting the intro.txt file in-->
   <pre class="textfile" id="intro">Loading…</pre>
 
 <!-- map header & map container-->
-<div>
-  <header><h1>Edinburgh Allotments</h1></header>
-</div>
-
 <div id="mapwrap">
   <div id="map"></div>
 
@@ -183,31 +303,45 @@ embed { display: block; width: 100%; height: 100vh; border: 0; }
   </div>
 
 </div>
+
 </div> <!-- /#Home -->
 
 
-<div id="Methodology" class="tabcontent">
-  <h1>METHODOLOGY</h1>
-  <!-- Initial content for the website-->
-  <h2>Problem statement</h2><p>How do the presence and condition of allotments relate to the Scottish Index of Multiple Deprivation (SIMD) Health Index across Edinburgh?</p>
-  <h2>Background</h2><p>Urban allotments provide space for growing food, outdoor activity and social connection. This project examines whether allotment presence and environmental condition are associated with local health indicators, </p>
-  <h2>Methodology</h2><p>Compare 10 allotment areas with 10 selected comparison areas without allotments. Combine council allotment data, field observations and SIMD data-zone health measures. A 300 m buffer is proposed around each study area</p>
+<div id="Methods" class="tabcontent">
+  <header><h1>Data Collection</h1></header>
+  <header><h1>Fieldwork</h1></header>
+  <h2>Example of images collected during fieldwork</h2>
+<div class="figure-row">
+  <figure>
+    <img src="prestonfield_entrance.jpeg" alt="Entrance pathway to Prestonfield Allotments">
+    <figcaption>Prestonfield Allotments entrance</figcaption>
+  </figure>
+  <figure>
+    <img src="Pilrig_Park_Pathway.jpeg" alt="Pathway through gate in Pilrig Park Allotments">
+    <figcaption>Pathway through gate in Pilrig Park Allotments</figcaption>
+  </figure>
+</div>
+
+<header><h1>Analysis</h1></header>
+
 </div>
 
 <div id="Findings" class="tabcontent">
-  <h1>FINDINGS</h1>
+  <header><h1>Statistical Analysis</h1></header>
   <p>RESULTS OF JENNY'S STATS TESTING</p> 
 </div>
 
 <div id="Query" class="tabcontent">
-  <h1>QUERY HERE</h1>
+  <header><h1>Query our database</h1></header>
   <p>Who we are and what we do.</p>
 </div>
 
-<!/-- Citations tab content -->
+<!-- Citations tab content -->
 <div id="Citations" class="tabcontent">
-  <h1>Further Reading</h1>
-  <pre class="citations" id="citations">Loading…</pre>
+  <header><h1>Further Reading</h1></header>
+  
+  <pre class="citations_textfile" id="citations">Loading…</pre>
+
 </div>
 
 <script>
@@ -217,8 +351,8 @@ const allotments = {"type":"FeatureCollection","features":[{"type":"Feature","pr
 const OUTLINE_ZOOM = 14;
 const $ = selector => document.querySelector(selector);
 
-// tab functionality from W3 schools 
-function openPage(pageName,elmnt,color) {
+// tab functionality from W3 schools  & edited with Claude Sonnet 5.5
+function openPage(pageName, elmnt) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -226,12 +360,11 @@ function openPage(pageName,elmnt,color) {
   }
   tablinks = document.getElementsByClassName("tablink");
   for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].style.backgroundColor = "";
+    tablinks[i].classList.remove("active");
   }
   document.getElementById(pageName).style.display = "block";
-  elmnt.style.backgroundColor = color;
+  elmnt.classList.add("active");
 }
-
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
@@ -241,18 +374,16 @@ const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&
 
 // embedding txt files 
 // citations.txt //
-  fetch("citations.txt")
+  fetch("citations.txt", { cache: "no-store" })
     .then(r => r.text())
     .then(text => { document.getElementById("citations").textContent = text; })
     .catch(() => { document.getElementById("citations").textContent = "Could not load citations."; });
 
 // intro.txt //
-  fetch("intro.txt")
+  fetch("intro.txt", { cache: "no-store" })
     .then(r => r.text())
     .then(text => { document.getElementById("intro").textContent = text; })
     .catch(() => { document.getElementById("intro").textContent = "Could not load file."; });
-
-
 
 
 function escapeHTML(s) {
